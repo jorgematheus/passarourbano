@@ -1,0 +1,117 @@
+<div class="container">
+  <div *ngIf="idPedido === undefined && itensCarrinho.length > 0 " class="ordem-compra">
+    <form [formGroup]="form" novalidate (ngSubmit)="confirmarCompra()">
+    
+      <h5>Sua Compra</h5>
+      <hr />
+
+      <div *ngFor="let item of itensCarrinho" class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+        <div class="form-group col-sm-1">
+          <img src="{{ item.img.url }}" class="img-fluid">
+        </div>
+        <div class="form-group col-sm-6">
+          {{ item.titulo }}
+          <br /> 
+          {{ item.descricao }}
+        </div>
+
+        <div>
+          <div class="row">
+            <div class="col">
+              <button type="button" class="btn btn-link" (click)="subtrair(item)">-</button>
+              {{ item.quantidade }}
+              <button type="button" class="btn btn-link" (click)="adicionar(item)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-sm-3 d-flex justify-content-end">
+          {{ item.quantidade * item.preco | currency: 'BRL' }}
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col d-flex justify-content-end">
+          <h4>Total do pedido: {{ carrinhoService.totalCarrinho() | currency: 'BRL' }}</h4>
+        </div>
+      </div>
+      <br />
+
+      <h5>Dados de entrega</h5>
+      <hr />
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Endereço" 
+            autocomplete="off" 
+            formControlName="endereco"
+          >
+          <small *ngIf="form.get('endereco').valid && form.get('endereco').touched" class="form-text text-success">Endereço Válido</small>
+          <small *ngIf="!form.get('endereco').valid && form.get('endereco').touched" class="form-text text-danger">Endereço Inválido</small>
+        </div>
+
+        <div class="form-group col-md-2">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Número" 
+            autocomplete="off"
+            formControlName="numero"
+          >
+          <small *ngIf="form.get('numero').valid && form.get('numero').touched" class="form-text text-success">Número Válido</small>
+          <small *ngIf="!form.get('numero').valid && form.get('numero').touched" class="form-text text-danger">Número Inválido</small>
+        </div>
+
+        <div class="form-group col-md-4">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Complemento" 
+            autocomplete="off"
+            formControlName="complemento"
+          >
+        </div>
+
+      </div>
+      <br />
+
+      <h5>Dados de pagamento</h5>
+      <hr />
+
+      <div class="form-row">
+          
+        <div class="form-group col-md-3">
+          <select 
+            class="form-control" 
+            formControlName="formaPagamento"> 
+            <option value="">Selecione uma opção</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="debito">Débito</option>
+          </select>
+          <small *ngIf="form.get('formaPagamento').valid && form.get('formaPagamento').touched" class="form-text text-success">Pagamento Válido</small>
+          <small *ngIf="!form.get('formaPagamento').valid && form.get('formaPagamento').touched" class="form-text text-danger">Pagamento Inválido</small>
+        </div>
+      </div>
+
+      <hr />
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-lg"              
+      >Cofirmar compra</button>
+    </form>  
+      
+  </div>  
+  <div *ngIf="idPedido != undefined">
+     <app-ordem-compra-sucesso [idPedidoCompra]="idPedido"></app-ordem-compra-sucesso>
+  </div>       
+  <div *ngIf="idPedido == undefined && itensCarrinho == 0" class="col-12">
+      <div class="alert alert-warning" style="margin-top: 30px">
+          Não há itens no carrinho!
+      </div>
+  </div>      
+</div>
+
